@@ -1,0 +1,179 @@
+<div id="taniska-candy-nexus">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --candy-pink: #ffc1e3;
+      --baby-blue: #b3e5fc;
+      --mint-cream: #f1f8e9;
+      --soft-purple: #e1bee7;
+      --honey-yellow: #fff9c4;
+      --text-color: #5d4037;
+    }
+
+    #taniska-candy-nexus {
+      width: 100%;
+      height: 900px;
+      background: linear-gradient(180deg, #fff5f8 0%, #e3f2fd 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      perspective: 3000px;
+      font-family: 'Quicksand', sans-serif;
+      position: relative;
+    }
+
+    /* Floating Branding */
+    .baby-brand {
+      position: absolute;
+      top: 30px;
+      font-family: 'Fredoka One', cursive;
+      color: #ff80ab;
+      font-size: 2rem;
+      text-shadow: 3px 3px 0px #fff, 5px 5px 15px rgba(255, 128, 171, 0.3);
+      z-index: 50;
+    }
+
+    .nexus-stage {
+      position: relative;
+      width: 240px;
+      height: 320px;
+      transform-style: preserve-3d;
+      /* Super slow rotation for clarity */
+      animation: sweetRotate 200s linear infinite;
+    }
+
+    @keyframes sweetRotate {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(-360deg); }
+    }
+
+    #taniska-candy-nexus:hover .nexus-stage {
+      animation-play-state: paused;
+    }
+
+    .n-card {
+      position: absolute;
+      width: 240px;
+      height: 320px;
+      background: white;
+      border-radius: 40px;
+      display: flex;
+      flex-direction: column;
+      backface-visibility: hidden;
+      /* Soft Baby Shadows */
+      box-shadow: 0 15px 35px rgba(0,0,0,0.05), inset 0 -10px 0px rgba(0,0,0,0.02);
+      border: 6px solid white;
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .n-card:hover {
+      transform: scale(1.15) translateY(-30px) !important;
+      box-shadow: 0 30px 60px rgba(255, 128, 171, 0.2);
+      z-index: 100;
+    }
+
+    /* Card Top Coloring based on Family */
+    .c-top {
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      border-radius: 34px 34px 0 0;
+    }
+
+    /* Sweet Family Colors */
+    .family-a { background: var(--candy-pink); }
+    .family-e { background: var(--baby-blue); }
+    .family-i { background: var(--honey-yellow); }
+    .family-o { background: var(--soft-purple); }
+    .family-u { background: #c8e6c9; }
+
+    .c-body {
+      padding: 20px;
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .c-word {
+      font-family: 'Fredoka One', cursive;
+      font-size: 4rem;
+      color: var(--text-color);
+      margin: 0;
+      line-height: 1;
+    }
+
+    .c-sound {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: #888;
+      margin-top: 15px;
+      background: #fdfdfd;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px dashed #ddd;
+    }
+  </style>
+
+  <div class="baby-brand">Taniska Mondal</div>
+
+  <div class="nexus-stage" id="candy-container">
+    </div>
+
+  <script>
+    const data = [
+      // A Family
+      {f: "a", w: "ab", s: "/ae/ /b/", e: "🍎"}, {f: "a", w: "ad", s: "/ae/ /d/", e: "🍎"},
+      {f: "a", w: "ag", s: "/ae/ /g/", e: "🍎"}, {f: "a", w: "am", s: "/ae/ /m/", e: "🍎"},
+      {f: "a", w: "an", s: "/ae/ /n/", e: "🍎"}, {f: "a", w: "ap", s: "/ae/ /p/", e: "🍎"},
+      {f: "a", w: "at", s: "/ae/ /t/", e: "🍎"}, {f: "a", w: "all", s: "/aw/ /l/", e: "🍎"},
+      {f: "a", w: "ank", s: "/ae/ /ng/ /k/", e: "🍎"}, {f: "a", w: "age", s: "/ay/ /j/", e: "🍎"},
+      // E Family
+      {f: "e", w: "ed", s: "/eh/ /d/", e: "🥚"}, {f: "e", w: "en", s: "/eh/ /n/", e: "🥚"},
+      {f: "e", w: "et", s: "/eh/ /t/", e: "🥚"}, {f: "e", w: "eg", s: "/eh/ /g/", e: "🥚"},
+      {f: "e", w: "ell", s: "/eh/ /l/", e: "🥚"},
+      // I Family
+      {f: "i", w: "id", s: "/ih/ /d/", e: "🍦"}, {f: "i", w: "ig", s: "/ih/ /g/", e: "🍦"},
+      {f: "i", w: "in", s: "/ih/ /n/", e: "🍦"}, {f: "i", w: "ip", s: "/ih/ /p/", e: "🍦"},
+      {f: "i", w: "it", s: "/ih/ /t/", e: "🍦"}, {f: "i", w: "ib", s: "/ih/ /b/", e: "🍦"},
+      {f: "i", w: "ix", s: "/ih/ /k/ /s/", e: "🍦"}, {f: "i", w: "ice", s: "/ai/ /s/", e: "🍦"},
+      {f: "i", w: "ill", s: "/ih/ /l/", e: "🍦"},
+      // O Family
+      {f: "o", w: "ob", s: "/ah/ /b/", e: "🐙"}, {f: "o", w: "od", s: "/ah/ /d/", e: "🐙"},
+      {f: "o", w: "og", s: "/ah/ /g/", e: "🐙"}, {f: "o", w: "op", s: "/ah/ /p/", e: "🐙"},
+      {f: "o", w: "ot", s: "/ah/ /t/", e: "🐙"}, {f: "o", w: "on", s: "/ah/ /n/", e: "🐙"},
+      {f: "o", w: "ox", s: "/ah/ /k/ /s/", e: "🐙"}, {f: "o", w: "ock", s: "/ah/ /k/", e: "🐙"},
+      {f: "o", w: "ong", s: "/ah/ /ng/", e: "🐙"}, {f: "o", w: "oss", s: "/ah/ /s/", e: "🐙"},
+      // U Family
+      {f: "u", w: "ut", s: "/uh/ /t/", e: "☂️"}, {f: "u", w: "ug", s: "/uh/ /g/", e: "☂️"},
+      {f: "u", w: "um", s: "/uh/ /m/", e: "☂️"}, {f: "u", w: "ud", s: "/uh/ /d/", e: "☂️"},
+      {f: "u", w: "up", s: "/uh/ /p/", e: "☂️"}, {f: "u", w: "ub", s: "/uh/ /b/", e: "☂️"},
+      {f: "u", w: "un", s: "/uh/ /n/", e: "☂️"}
+    ];
+
+    const stage = document.getElementById('candy-container');
+    const radius = 1700; // Large radius for HD space
+
+    data.forEach((item, i) => {
+      const angle = i * (360 / data.length);
+      const card = document.createElement('div');
+      card.className = 'n-card';
+      card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+      
+      card.innerHTML = `
+        <div class="c-top family-${item.f}">${item.e}</div>
+        <div class="c-body">
+          <h2 class="c-word">${item.w}</h2>
+          <div class="c-sound">${item.s}</div>
+        </div>
+      `;
+      stage.appendChild(card);
+    });
+  </script>
+</div>

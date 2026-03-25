@@ -1,0 +1,201 @@
+<div id="taniska-phonics-nexus">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --cyan: #00f2ff;
+      --violet: #7000ff;
+      --pink: #ff007a;
+      --gold: #ffcc00;
+      --glass: rgba(15, 15, 35, 0.9);
+      --card-w: 260px;
+      --card-h: 340px;
+    }
+
+    #taniska-phonics-nexus {
+      width: 100%;
+      height: 850px;
+      background: #000;
+      background-image: radial-gradient(circle at 50% 50%, #150525 0%, #000 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      perspective: 3500px;
+      font-family: 'Inter', sans-serif;
+      position: relative;
+    }
+
+    /* Top Branding UI */
+    .header-ui {
+      position: absolute;
+      top: 30px;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .user-name {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      text-shadow: 0 0 15px var(--cyan);
+      margin-bottom: 5px;
+    }
+
+    .lesson-title {
+      color: #fff;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      letter-spacing: 2px;
+    }
+
+    /* 8D Cylinder Stage */
+    .nexus-stage {
+      position: relative;
+      width: var(--card-w);
+      height: var(--card-h);
+      transform-style: preserve-3d;
+      /* Super Slow cinematic rotation */
+      animation: slowRotate 240s linear infinite; 
+    }
+
+    @keyframes slowRotate {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(-360deg); }
+    }
+
+    #taniska-phonics-nexus:hover .nexus-stage {
+      animation-play-state: paused;
+    }
+
+    /* Card Graphic Design */
+    .n-card {
+      position: absolute;
+      width: var(--card-w);
+      height: var(--card-h);
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      backface-visibility: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .n-card:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 40px rgba(0, 242, 255, 0.4);
+      transform: scale(1.1) translateZ(100px) !important;
+    }
+
+    .card-top {
+      height: 40%;
+      background: linear-gradient(135deg, rgba(112,0,255,0.2), transparent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .card-body {
+      padding: 25px;
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .family-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--pink);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .word-main {
+      color: #fff;
+      font-size: 3.8rem;
+      font-weight: 800;
+      line-height: 1;
+      margin: 0;
+      text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .sound-sub {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      margin-top: 12px;
+      font-weight: 500;
+    }
+  </style>
+
+  <div class="header-ui">
+    <div class="user-name">TANISKA MONDAL</div>
+    <div class="lesson-title">MASTERING WORD FAMILIES</div>
+  </div>
+  
+  <div class="nexus-stage" id="phonics-cylinder"></div>
+
+  <script>
+    const phonicsData = [
+      // A Family
+      {f: "A", w: "ab", s: "/ae/ /b/", e: "🍎"}, {f: "A", w: "ad", s: "/ae/ /d/", e: "🍎"},
+      {f: "A", w: "ag", s: "/ae/ /g/", e: "🍎"}, {f: "A", w: "am", s: "/ae/ /m/", e: "🍎"},
+      {f: "A", w: "an", s: "/ae/ /n/", e: "🍎"}, {f: "A", w: "ap", s: "/ae/ /p/", e: "🍎"},
+      {f: "A", w: "at", s: "/ae/ /t/", e: "🍎"}, {f: "A", w: "all", s: "/aw/ /l/", e: "🍎"},
+      {f: "A", w: "ank", s: "/ae/ /ng/ /k/", e: "🍎"}, {f: "A", w: "age", s: "/ay/ /j/", e: "🍎"},
+      // E Family
+      {f: "E", w: "ed", s: "/eh/ /d/", e: "🥚"}, {f: "E", w: "en", s: "/eh/ /n/", e: "🥚"},
+      {f: "E", w: "et", s: "/eh/ /t/", e: "🥚"}, {f: "E", w: "eg", s: "/eh/ /g/", e: "🥚"},
+      {f: "E", w: "ell", s: "/eh/ /l/", e: "🥚"},
+      // I Family
+      {f: "I", w: "id", s: "/ih/ /d/", e: "🍦"}, {f: "I", w: "ig", s: "/ih/ /g/", e: "🍦"},
+      {f: "I", w: "in", s: "/ih/ /n/", e: "🍦"}, {f: "I", w: "ip", s: "/ih/ /p/", e: "🍦"},
+      {f: "I", w: "it", s: "/ih/ /t/", e: "🍦"}, {f: "I", w: "ib", s: "/ih/ /b/", e: "🍦"},
+      {f: "I", w: "ix", s: "/ih/ /k/ /s/", e: "🍦"}, {f: "I", w: "ice", s: "/ai/ /s/", e: "🍦"},
+      {f: "I", w: "ill", s: "/ih/ /l/", e: "🍦"},
+      // O Family
+      {f: "O", w: "ob", s: "/ah/ /b/", e: "🐙"}, {f: "O", w: "od", s: "/ah/ /d/", e: "🐙"},
+      {f: "O", w: "og", s: "/ah/ /g/", e: "🐙"}, {f: "O", w: "op", s: "/ah/ /p/", e: "🐙"},
+      {f: "O", w: "ot", s: "/ah/ /t/", e: "🐙"}, {f: "O", w: "on", s: "/ah/ /n/", e: "🐙"},
+      {f: "O", w: "ox", s: "/ah/ /k/ /s/", e: "🐙"}, {f: "O", w: "ock", s: "/ah/ /k/", e: "🐙"},
+      {f: "O", w: "ong", s: "/ah/ /ng/", e: "🐙"}, {f: "O", w: "oss", s: "/ah/ /s/", e: "🐙"},
+      // U Family
+      {f: "U", w: "ut", s: "/uh/ /t/", e: "☂️"}, {f: "U", w: "ug", s: "/uh/ /g/", e: "☂️"},
+      {f: "U", w: "um", s: "/uh/ /m/", e: "☂️"}, {f: "U", w: "ud", s: "/uh/ /d/", e: "☂️"},
+      {f: "U", w: "up", s: "/uh/ /p/", e: "☂️"}, {f: "U", w: "ub", s: "/uh/ /b/", e: "☂️"},
+      {f: "U", w: "un", s: "/uh/ /n/", e: "☂️"}
+    ];
+
+    const stage = document.getElementById('phonics-cylinder');
+    const totalCards = phonicsData.length;
+    const radius = 1600; // Wide radius for clarity
+
+    phonicsData.forEach((item, i) => {
+      const angle = i * (360 / totalCards);
+      const card = document.createElement('div');
+      card.className = 'n-card';
+      card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+      
+      card.innerHTML = `
+        <div class="card-top">${item.e}</div>
+        <div class="card-body">
+          <div class="family-tag">The '${item.f}' Family</div>
+          <h2 class="word-main">${item.w}</h2>
+          <div class="sound-sub">${item.s}</div>
+        </div>
+      `;
+      stage.appendChild(card);
+    });
+  </script>
+</div>

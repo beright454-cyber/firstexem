@@ -1,0 +1,318 @@
+import React, { useState, useEffect } from 'react';
+import { BookOpen, Calculator, Globe, Star, ArrowRight, CheckCircle2, XCircle, RefreshCcw, Home } from 'lucide-react';
+
+// --- QUIZ DATA BASED ON SYLLABUS ---
+const quizData = {
+  Math: {
+    First: [
+      { q: "What comes after 49?", options: ["48", "50", "51"], ans: "50" },
+      { q: "Number Name for 12 is:", options: ["Twenty", "Two", "Twelve"], ans: "Twelve" },
+      { q: "Which is greater? 15 ___ 10", options: [">", "<", "="], ans: ">" },
+      { q: "Count backward: 5, 4, 3, ___", options: ["2", "6", "1"], ans: "2" },
+      { q: "Which is a day of the week?", options: ["January", "Monday", "Summer"], ans: "Monday" }
+    ],
+    Second: [
+      { q: "Addition: 4 + 3 =", options: ["6", "7", "8"], ans: "7" },
+      { q: "Which shape is round?", options: ["Square", "Circle", "Triangle"], ans: "Circle" },
+      { q: "Descending Order (Big to Small): 10, 9, 8, ___", options: ["11", "7", "6"], ans: "7" },
+      { q: "Subtraction: 5 - 2 =", options: ["3", "2", "4"], ans: "3" },
+      { q: "Number Name for 50 is:", options: ["Fifteen", "Five", "Fifty"], ans: "Fifty" }
+    ],
+    Annual: [
+      { q: "Addition: 12 + 10 =", options: ["22", "20", "120"], ans: "22" },
+      { q: "Ordinal name for 1:", options: ["One", "First", "Second"], ans: "First" },
+      { q: "Which shape has 3 sides?", options: ["Square", "Rectangle", "Triangle"], ans: "Triangle" },
+      { q: "Ascending Order (Small to Big): 2, 4, 6, ___", options: ["5", "8", "7"], ans: "8" },
+      { q: "Number name for 100 is:", options: ["Ten", "One Hundred", "Thousand"], ans: "One Hundred" }
+    ]
+  },
+  English: {
+    First: [
+      { q: "Missing letter: A P P _ E", options: ["L", "M", "N"], ans: "L" },
+      { q: "Put 'a' or 'an': ___ Apple", options: ["a", "an", "the"], ans: "an" },
+      { q: "Rhyming word for CAT:", options: ["Dog", "Bat", "Sun"], ans: "Bat" },
+      { q: "Pair words: Bat and ___", options: ["Ball", "Shoe", "Table"], ans: "Ball" },
+      { q: "Word Family 'a':", options: ["Pen", "Fan", "Pin"], ans: "Fan" }
+    ],
+    Second: [
+      { q: "Opposite of HOT:", options: ["Warm", "Cold", "Big"], ans: "Cold" },
+      { q: "Plural of BOOK is:", options: ["Books", "Bookes", "Bokes"], ans: "Books" },
+      { q: "Which is an Action Word (Doing Word)?", options: ["Apple", "Red", "Run"], ans: "Run" },
+      { q: "Use is/am/are: I ___ a student.", options: ["is", "am", "are"], ans: "am" },
+      { q: "Naming word (Noun):", options: ["Jump", "Happy", "Chair"], ans: "Chair" }
+    ],
+    Annual: [
+      { q: "Use of he/she: ___ is a good boy.", options: ["He", "She", "It"], ans: "He" },
+      { q: "Use of has/have: I ___ a toy.", options: ["has", "have", "had"], ans: "have" },
+      { q: "Use of in/on/under: The cat is ___ the table.", options: ["under", "between", "over"], ans: "under" },
+      { q: "Opposite of DAY:", options: ["Sun", "Night", "Morning"], ans: "Night" },
+      { q: "Use of was/were: They ___ playing.", options: ["was", "were", "is"], ans: "were" }
+    ]
+  },
+  Bengali: {
+    First: [
+      { q: "অ এর পরে কী হয়?", options: ["আ", "ই", "ঈ"], ans: "আ" },
+      { q: "ফাঁকা ঘরে বর্ণ বসাও: ক, খ, গ, ___", options: ["চ", "ঘ", "ঙ"], ans: "ঘ" },
+      { q: "দুটি ফলের নাম:", options: ["আম ও জাম", "আলু ও পটল", "কাক ও বক"], ans: "আম ও জাম" },
+      { q: "দুই অক্ষর যুক্ত শব্দ:", options: ["কলম", "জল", "আকাশ"], ans: "জল" }
+    ],
+    Second: [
+      { q: "বিপরীত শব্দ: দিন - ?", options: ["রাত", "সকাল", "দুপুর"], ans: "রাত" },
+      { q: "পাখির নাম কোনটি?", options: ["টিয়া", "বাঘ", "গোলাপ"], ans: "টিয়া" },
+      { q: "১-১০ বানান: ৫ কে কী বলে?", options: ["পাঁচ", "ছয়", "চার"], ans: "পাঁচ" },
+      { q: "তিন অক্ষরের শব্দ:", options: ["বই", "কলম", "হাত"], ans: "কলম" }
+    ],
+    Annual: [
+      { q: "সপ্তাহের প্রথম দিন কী?", options: ["সোমবার", "রবিবার", "মঙ্গলবার"], ans: "রবিবার" },
+      { q: "বিপরীত শব্দ: বড় - ?", options: ["ছোট", "লম্বা", "মোটা"], ans: "ছোট" },
+      { q: "জাতীয় ফুল কোনটি?", options: ["পদ্ম", "গোলাপ", "জবা"], ans: "পদ্ম" },
+      { q: "আ-কার যোগে শব্দ:", options: ["বই", "মাথা", "জল"], ans: "মাথা" }
+    ]
+  }
+};
+
+export default function App() {
+  const [screen, setScreen] = useState('home'); // home, terms, quiz, result
+  const [subject, setSubject] = useState(null);
+  const [term, setTerm] = useState(null);
+  
+  const [questions, setQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isCorrect, setIsCorrect] = useState(null);
+
+  const handleSubjectSelect = (sub) => {
+    setSubject(sub);
+    setScreen('terms');
+  };
+
+  const handleTermSelect = (t) => {
+    setTerm(t);
+    setQuestions(quizData[subject][t]);
+    setCurrentIndex(0);
+    setScore(0);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+    setScreen('quiz');
+  };
+
+  const handleAnswerClick = (option) => {
+    if (selectedAnswer !== null) return; // Prevent multiple clicks
+    
+    const correctAns = questions[currentIndex].ans;
+    setSelectedAnswer(option);
+    
+    if (option === correctAns) {
+      setIsCorrect(true);
+      setScore(score + 1);
+    } else {
+      setIsCorrect(false);
+    }
+
+    // Wait a moment before moving to next question
+    setTimeout(() => {
+      if (currentIndex < questions.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+        setSelectedAnswer(null);
+        setIsCorrect(null);
+      } else {
+        setScreen('result');
+      }
+    }, 1500);
+  };
+
+  const resetQuiz = () => {
+    setScreen('home');
+    setSubject(null);
+    setTerm(null);
+  };
+
+  // --- UI RENDERERS ---
+
+  if (screen === 'home') {
+    return (
+      <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-6 font-sans">
+        <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 text-center space-y-8">
+          <div className="space-y-2">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-blue-600">Smart Kids Exam</h1>
+            <p className="text-gray-500 text-lg">Upper KG Syllabus Practice</p>
+          </div>
+          
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-700">Choose a Subject:</h2>
+            <button 
+              onClick={() => handleSubjectSelect('Math')}
+              className="w-full flex items-center justify-center gap-3 bg-rose-500 hover:bg-rose-600 text-white p-5 rounded-2xl text-2xl font-bold shadow-md transition-transform active:scale-95"
+            >
+              <Calculator size={32} /> Mathematics
+            </button>
+            <button 
+              onClick={() => handleSubjectSelect('English')}
+              className="w-full flex items-center justify-center gap-3 bg-amber-500 hover:bg-amber-600 text-white p-5 rounded-2xl text-2xl font-bold shadow-md transition-transform active:scale-95"
+            >
+              <BookOpen size={32} /> English
+            </button>
+            <button 
+              onClick={() => handleSubjectSelect('Bengali')}
+              className="w-full flex items-center justify-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-white p-5 rounded-2xl text-2xl font-bold shadow-md transition-transform active:scale-95"
+            >
+              <Globe size={32} /> Bengali
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === 'terms') {
+    return (
+      <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-6 font-sans">
+        <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 text-center space-y-8 relative">
+          <button 
+            onClick={() => setScreen('home')}
+            className="absolute top-6 left-6 text-gray-400 hover:text-gray-600"
+          >
+            <Home size={28} />
+          </button>
+          
+          <div className="space-y-2 mt-4">
+            <h1 className="text-3xl font-extrabold text-blue-600">{subject}</h1>
+            <p className="text-gray-500 text-lg">Select Examination Term</p>
+          </div>
+          
+          <div className="space-y-4">
+            <button 
+              onClick={() => handleTermSelect('First')}
+              className="w-full bg-indigo-500 hover:bg-indigo-600 text-white p-5 rounded-2xl text-xl font-bold shadow-md transition-transform active:scale-95"
+            >
+              1st Term Exam
+            </button>
+            <button 
+              onClick={() => handleTermSelect('Second')}
+              className="w-full bg-violet-500 hover:bg-violet-600 text-white p-5 rounded-2xl text-xl font-bold shadow-md transition-transform active:scale-95"
+            >
+              2nd Term Exam
+            </button>
+            <button 
+              onClick={() => handleTermSelect('Annual')}
+              className="w-full bg-purple-500 hover:bg-purple-600 text-white p-5 rounded-2xl text-xl font-bold shadow-md transition-transform active:scale-95"
+            >
+              Annual Exam
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === 'quiz') {
+    const currentQ = questions[currentIndex];
+    const progressPercentage = ((currentIndex + 1) / questions.length) * 100;
+
+    return (
+      <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4 sm:p-6 font-sans">
+        <div className="max-w-xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[80vh] max-h-[700px]">
+          
+          {/* Header & Progress */}
+          <div className="bg-blue-600 p-6 text-white flex-shrink-0">
+            <div className="flex justify-between items-center mb-4">
+              <span className="font-bold text-lg bg-blue-700 px-3 py-1 rounded-full">
+                {subject} - {term} Term
+              </span>
+              <span className="font-bold text-lg">
+                {currentIndex + 1} / {questions.length}
+              </span>
+            </div>
+            <div className="w-full bg-blue-300 rounded-full h-3">
+              <div 
+                className="bg-yellow-400 h-3 rounded-full transition-all duration-500" 
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Question Area */}
+          <div className="flex-1 p-6 sm:p-10 flex flex-col justify-center items-center text-center overflow-y-auto">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-10 leading-tight">
+              {currentQ.q}
+            </h2>
+
+            <div className="w-full space-y-4">
+              {currentQ.options.map((option, idx) => {
+                let buttonStyle = "bg-gray-100 text-gray-700 hover:bg-gray-200 border-2 border-gray-200";
+                
+                if (selectedAnswer !== null) {
+                  if (option === currentQ.ans) {
+                    buttonStyle = "bg-green-100 text-green-800 border-2 border-green-500";
+                  } else if (option === selectedAnswer) {
+                    buttonStyle = "bg-red-100 text-red-800 border-2 border-red-500";
+                  }
+                }
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleAnswerClick(option)}
+                    disabled={selectedAnswer !== null}
+                    className={`w-full p-5 sm:p-6 rounded-2xl text-2xl sm:text-3xl font-bold transition-all shadow-sm ${buttonStyle} flex justify-between items-center`}
+                  >
+                    <span>{option}</span>
+                    {selectedAnswer !== null && option === currentQ.ans && <CheckCircle2 className="text-green-500" size={32} />}
+                    {selectedAnswer === option && option !== currentQ.ans && <XCircle className="text-red-500" size={32} />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === 'result') {
+    const percentage = Math.round((score / questions.length) * 100);
+    let message = "";
+    let emoji = "";
+    
+    if (percentage >= 80) {
+      message = "Excellent Job!";
+      emoji = "🌟";
+    } else if (percentage >= 50) {
+      message = "Good Try!";
+      emoji = "👍";
+    } else {
+      message = "Keep Practicing!";
+      emoji = "💪";
+    }
+
+    return (
+      <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-6 font-sans">
+        <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-10 text-center space-y-8">
+          <div className="text-7xl animate-bounce">
+            {emoji}
+          </div>
+          
+          <h1 className="text-4xl font-extrabold text-gray-800">{message}</h1>
+          
+          <div className="bg-blue-100 rounded-3xl p-6 border-4 border-blue-200">
+            <p className="text-gray-500 text-xl font-semibold mb-2">Your Score</p>
+            <p className="text-6xl font-black text-blue-600">
+              {score} <span className="text-3xl text-blue-400">/ {questions.length}</span>
+            </p>
+          </div>
+
+          <button 
+            onClick={resetQuiz}
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white p-5 rounded-2xl text-2xl font-bold shadow-lg transition-transform active:scale-95"
+          >
+            <RefreshCcw size={28} /> Play Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
